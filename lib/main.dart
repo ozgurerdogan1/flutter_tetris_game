@@ -9,10 +9,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Tetris Game',
       debugShowCheckedModeBanner: false,
-      home: GameBoard()
+      theme: ThemeData.dark(),
+      home: GameBoard(),
     );
   }
 }

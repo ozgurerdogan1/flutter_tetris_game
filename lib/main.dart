@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'board.dart';
 
@@ -9,11 +10,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
     return MaterialApp(
       title: 'Tetris Game',
       debugShowCheckedModeBanner: false,
+      showPerformanceOverlay: false,
       theme: ThemeData.dark(),
-      home: GameBoard(),
+      home: const GameBoard(),
     );
   }
 }

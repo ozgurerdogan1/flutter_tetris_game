@@ -131,8 +131,10 @@ class Piece {
             newPosition[2] = position[2] - rowLenght - 1;
             newPosition[3] = position[3] - rowLenght * 2;
 
-            position = newPosition;
-            rotateState = (rotateState + 1) % 4;
+            if (piecePositionIsValid(newPosition)) {
+              position = newPosition;
+              rotateState = (rotateState + 1) % 4;
+            }
             break;
 
           case 1: //16,15,14,4 -> 25,15,5,6
@@ -141,8 +143,10 @@ class Piece {
             newPosition[2] = position[2] - rowLenght + 1;
             newPosition[3] = position[3] + 2;
 
-            position = newPosition;
-            rotateState = (rotateState + 1) % 4;
+            if (piecePositionIsValid(newPosition)) {
+              position = newPosition;
+              rotateState = (rotateState + 1) % 4;
+            }
             break;
           case 2: //25,15,5,6 -> 14,15,16,26
             newPosition[0] = position[0] - rowLenght - 1;
@@ -150,8 +154,10 @@ class Piece {
             newPosition[2] = position[2] + rowLenght + 1;
             newPosition[3] = position[3] + rowLenght * 2;
 
-            position = newPosition;
-            rotateState = (rotateState + 1) % 4;
+            if (piecePositionIsValid(newPosition)) {
+              position = newPosition;
+              rotateState = (rotateState + 1) % 4;
+            }
             break;
           case 3: //14,15,16,26 -> 5,15,25,24
             newPosition[0] = position[0] - rowLenght + 1;
@@ -159,8 +165,10 @@ class Piece {
             newPosition[2] = position[2] + rowLenght - 1;
             newPosition[3] = position[3] - 2;
 
-            position = newPosition;
-            rotateState = (rotateState + 1) % 4;
+            if (piecePositionIsValid(newPosition)) {
+              position = newPosition;
+              rotateState = (rotateState + 1) % 4;
+            }
             break;
         }
       case Tetromino.I:
@@ -171,8 +179,10 @@ class Piece {
             newPosition[2] = position[2] - rowLenght + 1;
             newPosition[3] = position[3] - rowLenght * 2 + 2;
 
-            position = newPosition;
-            rotateState = (rotateState + 1) % 2;
+            if (piecePositionIsValid(newPosition)) {
+              position = newPosition;
+              rotateState = (rotateState + 1) % 2;
+            }
             break;
 
           case 1: //13,14,15,16 -> 4,14,24,34
@@ -181,8 +191,10 @@ class Piece {
             newPosition[2] = position[2] + rowLenght - 1;
             newPosition[3] = position[3] + rowLenght * 2 - 2;
 
-            position = newPosition;
-            rotateState = (rotateState + 1) % 2;
+            if (piecePositionIsValid(newPosition)) {
+              position = newPosition;
+              rotateState = (rotateState + 1) % 2;
+            }
             break;
         }
       case Tetromino.S:
@@ -193,8 +205,10 @@ class Piece {
             newPosition[2] = position[2] + 2;
             newPosition[3] = position[3];
 
-            position = newPosition;
-            rotateState = (rotateState + 1) % 2;
+            if (piecePositionIsValid(newPosition)) {
+              position = newPosition;
+              rotateState = (rotateState + 1) % 2;
+            }
             break;
 
           case 1: //4,25,15,14 -> 4,5,13,14
@@ -203,8 +217,10 @@ class Piece {
             newPosition[2] = position[2] - 2;
             newPosition[3] = position[3];
 
-            position = newPosition;
-            rotateState = (rotateState + 1) % 2;
+            if (piecePositionIsValid(newPosition)) {
+              position = newPosition;
+              rotateState = (rotateState + 1) % 2;
+            }
             break;
         }
       case Tetromino.Z:
@@ -215,8 +231,10 @@ class Piece {
             newPosition[2] = position[2];
             newPosition[3] = position[3] - rowLenght;
 
-            position = newPosition;
-            rotateState = (rotateState + 1) % 2;
+            if (piecePositionIsValid(newPosition)) {
+              position = newPosition;
+              rotateState = (rotateState + 1) % 2;
+            }
             break;
 
           case 1: //5,14,24,15 -> 13,14,24,25
@@ -225,8 +243,10 @@ class Piece {
             newPosition[2] = position[2];
             newPosition[3] = position[3] + rowLenght;
 
-            position = newPosition;
-            rotateState = (rotateState + 1) % 2;
+            if (piecePositionIsValid(newPosition)) {
+              position = newPosition;
+              rotateState = (rotateState + 1) % 2;
+            }
             break;
         }
       case Tetromino.T:
@@ -237,8 +257,10 @@ class Piece {
             newPosition[2] = position[2] + rowLenght - 1;
             newPosition[3] = position[3] - rowLenght - 1;
 
-            position = newPosition;
-            rotateState = (rotateState + 1) % 4;
+            if (piecePositionIsValid(newPosition)) {
+              position = newPosition;
+              rotateState = (rotateState + 1) % 4;
+            }
             break;
 
           case 1: //15,14,24,13 -> 24,14,13,4
@@ -247,8 +269,10 @@ class Piece {
             newPosition[2] = position[2] - rowLenght - 1;
             newPosition[3] = position[3] - rowLenght + 1;
 
-            position = newPosition;
-            rotateState = (rotateState + 1) % 4;
+            if (piecePositionIsValid(newPosition)) {
+              position = newPosition;
+              rotateState = (rotateState + 1) % 4;
+            }
             break;
           case 2: //24,14,13,4-> 13,14,4,15
             newPosition[0] = position[0] - rowLenght - 1;
@@ -256,8 +280,10 @@ class Piece {
             newPosition[2] = position[2] - rowLenght + 1;
             newPosition[3] = position[3] + rowLenght + 1;
 
-            position = newPosition;
-            rotateState = (rotateState + 1) % 4;
+            if (piecePositionIsValid(newPosition)) {
+              position = newPosition;
+              rotateState = (rotateState + 1) % 4;
+            }
             break;
           case 3: //13,14,4,15 -> 4,14,15,24
             newPosition[0] = position[0] - rowLenght + 1;
@@ -265,8 +291,10 @@ class Piece {
             newPosition[2] = position[2] + rowLenght + 1;
             newPosition[3] = position[3] + rowLenght - 1;
 
-            position = newPosition;
-            rotateState = (rotateState + 1) % 4;
+            if (piecePositionIsValid(newPosition)) {
+              position = newPosition;
+              rotateState = (rotateState + 1) % 4;
+            }
             break;
         }
 
@@ -280,10 +308,9 @@ class Piece {
     int col = position % rowLenght;
 
     if (row < 0 || col < 0 || gameBoard[row][col] != null) {
-      print("positionIsValid false");
       return false;
     }
-    print("positionIsValid true");
+
     return true;
   }
 
@@ -293,7 +320,6 @@ class Piece {
 
     for (int pos in piecePositions) {
       if (!positionIsValid(pos)) {
-        print("piecePositionIsValid false");
         return false;
       }
 
@@ -306,8 +332,6 @@ class Piece {
         lastColOccupied = true;
       }
     }
-    print("firstcol: $firstColOccupied, lastcol: $lastColOccupied");
-    print("piecePositionIsValid: ${!(firstColOccupied && lastColOccupied)}");
     return !(firstColOccupied && lastColOccupied);
   }
 }

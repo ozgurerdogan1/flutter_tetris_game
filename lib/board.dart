@@ -28,6 +28,9 @@ class _GameBoardState extends State<GameBoard> {
   Piece _currentPiece = Piece(type: Tetromino.L);
 
   bool isGameStop = false;
+  bool _isGameOver = false;
+
+  int _score = 0;
 
   @override
   void initState() {
@@ -38,23 +41,25 @@ class _GameBoardState extends State<GameBoard> {
   void startGame() {
     _currentPiece.initializePiece();
 
-    const Duration frameRate = Duration(milliseconds: 1000);
+    const Duration frameRate = Duration(milliseconds: 700);
     gameLoop(frameRate);
   }
 
   void gameLoop(Duration frameRate) async {
     Timer.periodic(frameRate, (timer) {
-      if (!isGameStop) {
-        setState(() {
-          checkLanding();
-          _currentPiece.movePiece(Directions.down);
-        });
-      }
+      setState(() {
+        if (_isGameOver) {
+          timer.cancel();
+          showDialogGameOver();
+        }
+        checkLanding();
+        clearLines();
+        _currentPiece.movePiece(Directions.down);
+      });
     });
   }
 
   bool checkCollision(Directions direction) {
-    print("checkCollision");
     for (var i = 0; i < _currentPiece.position.length; i++) {
       int row = (_currentPiece.position[i] / rowLenght).floor(); // 0-14
       int col = _currentPiece.position[i] % rowLenght; // 0-9
@@ -95,8 +100,38 @@ class _GameBoardState extends State<GameBoard> {
   createNewPiece() {
     Random random = Random();
     Tetromino randomType = Tetromino.values[random.nextInt(Tetromino.values.length)];
-    // _currentPiece = Piece(type: randomType);
+    _currentPiece = Piece(type: randomType);
     _currentPiece.initializePiece();
+
+    gameOver();
+  }
+
+  clearLines() {
+    for (int row = colLenght - 1; row >= 0; row--) {
+      bool rowIsFull = true;
+
+      for (int col = 0; col < rowLenght; col++) {
+        if (gameBoard[row][col] == null) {
+          rowIsFull = false;
+          break;
+        }
+      }
+
+      if (rowIsFull) {
+        for (int r = row; r > 0; r--) {
+          gameBoard[r] = List.from(gameBoard[r - 1]);
+        }
+
+        gameBoard[0] = List.generate(rowLenght, (index) => null);
+        _score++;
+      }
+    }
+  }
+
+  void gameOver() {
+    if (gameBoard[0].any((element) => element != null)) {
+      _isGameOver = true;
+    }
   }
 
   @override
@@ -108,6 +143,10 @@ class _GameBoardState extends State<GameBoard> {
           padding: const EdgeInsets.all(2.0),
           child: Column(
             children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Text("Score: $_score"),
+              ),
               Expanded(
                 child: GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
@@ -116,42 +155,38 @@ class _GameBoardState extends State<GameBoard> {
                   itemBuilder: (context, index) {
                     int row = (index / rowLenght).floor();
                     int col = index % rowLenght;
+
                     if (_currentPiece.position.contains(index)) {
-                      return Pixel(index: index, color: _currentPiece.color);
+                      return Pixel(color: _currentPiece.color);
                     } else if (gameBoard[row][col] != null) {
                       final Tetromino? type = gameBoard[row][col];
 
                       return Pixel(
-                        index: index,
-                        color: tetrominoColors[type],
+                        color: Colors.pink,
                       );
                     }
-                    return Pixel(index: index, color: Colors.grey.shade900);
+                    return Pixel(color: Colors.grey.shade900);
                   },
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 40),
-                child: Column(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isGameStop = !isGameStop;
-                          });
-                        },
-                        icon: Icon(isGameStop ? Icons.play_arrow : Icons.pause)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        IconButton(onPressed: _moveLeft, icon: const Icon(Icons.arrow_back_ios)),
-                        IconButton(onPressed: _rotatePiece, icon: const Icon(Icons.rotate_left)),
-                        IconButton(onPressed: _moveRight, icon: const Icon(Icons.arrow_forward_ios)),
-                      ],
-                    ),
+                    IconButton(onPressed: _moveLeft, icon: const Icon(Icons.arrow_back_ios)),
+                    IconButton(onPressed: _rotatePiece, icon: const Icon(Icons.rotate_right)),
+                    IconButton(onPressed: _moveRight, icon: const Icon(Icons.arrow_forward_ios)),
                   ],
                 ),
-              )
+              ),
+              IconButton(
+                onPressed: _putDown,
+                icon: Transform.rotate(
+                  angle: pi * 0.5,
+                  child: const Icon(Icons.arrow_forward_ios),
+                ),
+              ),
             ],
           ),
         ),
@@ -179,5 +214,54 @@ class _GameBoardState extends State<GameBoard> {
     setState(() {
       _currentPiece.rotatePiece();
     });
+  }
+
+  void _putDown() {
+    bool res = true;
+
+    setState(() {
+      while (res) {
+        if (checkCollision(Directions.down)) {
+          res = false;
+        } else {
+          _currentPiece.movePiece(Directions.down);
+        }
+      }
+    });
+  }
+
+  void showDialogGameOver() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Game Over"),
+          content: Text("Your score is: $_score"),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  resetGame();
+                  Navigator.pop(context);
+                },
+                child: const Text("Play again")),
+          ],
+        );
+      },
+    );
+  }
+
+  void resetGame() {
+    gameBoard = List.generate(
+      colLenght,
+      (i) => List.generate(
+        rowLenght,
+        (j) => null,
+      ),
+    );
+
+    _isGameOver = false;
+    _score = 0;
+    createNewPiece();
+    startGame();
   }
 }

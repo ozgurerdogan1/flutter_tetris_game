@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class Pixel extends StatelessWidget {
-  int index;
+  int? index;
   Color? color;
 
   Pixel({
     Key? key,
-    required this.index,
+    this.index,
     this.color,
   }) : super(key: key);
 
@@ -21,14 +21,16 @@ class Pixel extends StatelessWidget {
         borderRadius: BorderRadius.circular(5),
       ),
       alignment: Alignment.center,
-      child: Center(
-        child: Text(
-          index.toString(),
-          style: const TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      ),
+      child: index == null
+          ? const SizedBox()
+          : Center(
+              child: Text(
+                index.toString(),
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
     );
   }
 }
